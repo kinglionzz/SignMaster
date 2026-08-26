@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Dashboard - NSL Classroom</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .sidebar { background: #343a40; color: white; min-height: 100vh; }
+        .nav-link { color: white !important; }
+        .nav-link:hover { background: #495057; }
+        .card { border-radius: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 sidebar p-3">
+                <h4 class="text-center mb-4">Wesley University Classroom</h4>
+                <hr>
+                <a href="{{ url_for('dashboard_lecturer') }}" class="nav-link d-block py-2"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{ url_for('video_library') }}" class="nav-link d-block py-2"><i class="fas fa-video"></i> Video Library</a>
+                <a href="{{ url_for('upload_video') }}" class="nav-link d-block py-2"><i class="fas fa-upload"></i> Upload Video</a>
+                <a href="{{ url_for('my_assignments') }}" class="nav-link d-block py-2"><i class="fas fa-tasks"></i> Check Assignments</a>
+                <a href="#" class="nav-link d-block py-2"><i class="fas fa-sign-language"></i> NSL Dictionary</a>
+                <hr>
+                <a href="{{ url_for('logout') }}" class="nav-link text-danger d-block py-2"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 p-4">
+                <h2>Welcome, {{ user.fullname }}! (Lecturer)</h2>
+                <p class="text-muted">Manage lectures and review student work</p>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow p-4">
+                            <h5>Upload Lecture Video</h5>
+                            <p>Share new lessons with NSL signing</p>
+                            <a href="{{ url_for('upload_video') }}" class="btn btn-success">Upload Video</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow p-4">
+                            <h5>Check Student Assignments</h5>
+                            <p>Review submissions and give feedback</p>
+                            <a href="{{ url_for('my_assignments') }}" class="btn btn-primary">View Assignments</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

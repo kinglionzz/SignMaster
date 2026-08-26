@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Check Student Assignments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+    <div class="container">
+        <h2>Student Assignments Submissions</h2>
+        <a href="{{ url_for('dashboard_lecturer') }}" class="btn btn-secondary mb-3">← Back to Dashboard</a>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Title</th>
+                    <th>File</th>
+                    <th>Comment</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ass in assignments %}
+                <tr>
+                    <td>Student {{ ass.student_id }}</td>
+                    <td>{{ ass.title }}</td>
+                    <td>
+                        <a href="{{ url_for('uploaded_file', filename=ass.file_path) }}" class="btn btn-info btn-sm" target="_blank">
+                            Download PDF
+                        </a>
+                    </td>
+                    <td>{{ ass.comment or 'No comment yet' }}</td>
+                    <td>
+                        <a href="{{ url_for('review_assignment', assignment_id=ass.id) }}" class="btn btn-primary btn-sm">Review & Reply</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

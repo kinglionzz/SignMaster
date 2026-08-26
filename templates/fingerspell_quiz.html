@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fingerspell Quiz - SignMaster</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .quiz-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .image-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            max-width: 420px;
+            margin: 0 auto 25px;
+            text-align: center;
+            padding: 15px;
+        }
+        .image-container img {
+            max-height: 320px;
+            width: auto;
+        }
+        .option-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-item:hover {
+            background: #f8f9fa;
+            border-color: #0d6efd;
+        }
+        .option-item.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option-item.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        .next-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Responsive Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c5e;">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">SignMaster</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    <a class="nav-link" href="{{ url_for('start_lesson') }}">Lessons</a>
+                    <a class="nav-link" href="{{ url_for('dictionary') }}">Dictionary</a>
+                    <a class="nav-link" href="{{ url_for('exercises') }}">Exercises</a>
+                    <a class="nav-link btn btn-light text-dark ms-lg-3 mt-2 mt-lg-0" href="{{ url_for('login') }}">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="quiz-container">
+
+            <h2 class="text-center mb-2">Fingerspell Quiz</h2>
+            <p class="text-center text-muted mb-4">Look at the fingerspelling image and choose the correct word</p>
+
+            <div class="text-center mb-3">
+                <span class="badge bg-primary fs-6">Question <span id="q-number">1</span>/10</span>
+            </div>
+
+            <!-- Image -->
+            <div class="image-container">
+                <img id="sign-image"
+                     src="{{ url_for('static', filename='cat.jpeg') }}"
+                     alt="Fingerspell sign"
+                     class="img-fluid rounded">
+            </div>
+
+            <h5 class="mb-3 text-center" id="question-text">What word is this?</h5>
+
+            <div id="options">
+                <!-- Options added by JavaScript -->
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <button onclick="nextQuestion()" class="btn btn-primary next-btn" id="next-btn">Next Question →</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let current = 0;
+        let answered = false;
+        let score = 0;
+
+        const questions = [
+            {
+                image: "cat.jpg",
+                question: "What word is this?",
+                options: ["CAR", "CAT", "COT", "BAT"],
+                correct: 1
+            },
+            {
+                image: "sun.jpg",
+                question: "What word is this?",
+                options: ["SON", "SUN", "RUN", "FUN"],
+                correct: 1
+            },
+            {
+                image: "love.jpg",
+                question: "What word is this?",
+                options: ["LIKE", "LIVE", "LOVE", "LOOK"],
+                correct: 2
+            },
+            {
+                image: "help.jpg",
+                question: "What word is this?",
+                options: ["HELP", "HOLD", "HERO", "HEAD"],
+                correct: 0
+            },
+            {
+                image: "book.jpg",
+                question: "What word is this?",
+                options: ["LOOK", "SIGN", "HELP", "BOOK"],
+                correct: 3
+            },
+            {
+                image: "name.jpg",
+                question: "What word is this?",
+                options: ["NEAR", "SAME", "NAME", "MORE"],
+                correct: 2
+            },
+            {
+                image: "deaf.jpg",
+                question: "What word is this?",
+                options: ["DEAF", "DEAR", "DEEP", "DARE"],
+                correct: 0
+            },
+            {
+                image: "sign.jpg",
+                question: "What word is this?",
+                options: ["SING", "SIGN", "SINK", "SIDE"],
+                correct: 1
+            },
+            {
+                image: "learn.jpg",
+                question: "What word is this?",
+                options: ["LIGHT", "LEARN", "LETTER", "LATER"],
+                correct: 1
+            },
+            {
+                image: "peace.jpg",
+                question: "What word is this?",
+                options: ["PLACE", "PAPER", "POWER", "PEACE"],
+                correct: 3
+            }
+        ];
+
+        function loadQuestion() {
+            const q = questions[current];
+
+            // Change image
+            document.getElementById('sign-image').src = "/static/" + q.image;
+
+            // Update question number and text
+            document.getElementById('q-number').innerText = current + 1;
+            document.getElementById('question-text').innerText = q.question;
+
+            // Create options
+            let html = '';
+            q.options.forEach((opt, i) => {
+                html += `
+                    <div class="option-item" onclick="selectAnswer(this, ${i})">
+                        ○ ${String.fromCharCode(65 + i)}. ${opt}
+                    </div>
+                `;
+            });
+            document.getElementById('options').innerHTML = html;
+
+            document.getElementById('next-btn').style.display = 'none';
+            answered = false;
+        }
+
+        function selectAnswer(elem, index) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[current];
+            const items = document.querySelectorAll('.option-item');
+
+            items.forEach((item, i) => {
+                if (i === q.correct) {
+                    item.classList.add('correct');
+                    item.innerHTML = "✓ " + item.innerText.substring(2);
+                }
+                if (i === index && i !== q.correct) {
+                    item.classList.add('wrong');
+                    item.innerHTML = "✗ " + item.innerText.substring(2);
+                }
+            });
+
+            if (index === q.correct) score++;
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            current++;
+            if (current < questions.length) {
+                loadQuestion();
+            } else {
+                window.location.href = "/quiz_result?score=" + score + "&total=" + questions.length;
+            }
+        }
+
+        // Start the quiz
+        loadQuestion();
+    </script>
+</body>
+</html>

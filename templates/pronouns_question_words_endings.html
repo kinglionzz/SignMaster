@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Relationship - SignMaster</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal side-scrolling */
+        }
+        .top-nav {
+            background-color: #1a3c5e;
+            padding: 12px 0;
+        }
+        .top-nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 25px;
+            font-weight: 500;
+        }
+        .top-nav a.active {
+            color: #ffc107;
+            border-bottom: 2px solid #ffc107;
+            padding-bottom: 4px;
+        }
+        .sidebar {
+            background-color: #1a3c5e;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 200px;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            padding-top: 70px;
+            z-index: 90;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 10px;
+        }
+        .sidebar-header h5{
+            margin: o;
+            font-weight: 600;
+            font-size: 16px;
+            color: #fff;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            padding: 10px 0;
+        }
+        .sidebar-link{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: #c5d0e0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+        .sidebar-link:hover{
+            background-color: rgba(255,255,255,0.08);
+            color: white;
+        }
+        .sidebar-link.active{
+            background-color: rgba(255,255,255,0.12);
+            color: white;
+            border-left: 4px solid #ffc107;
+        }
+        .lesson-num{
+            background: rgba(255,255,255,0.15);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .sidebar-link.active .lesson-num{
+            background: #ffc107;
+            color: #1a3c5e;
+        }
+        .sidebar a {
+            color: #d1d9e6;
+            text-decoration: none;
+            display: block;
+            padding: 14px 20px;
+            border-left: 4px solid transparent;
+            font-size: 15px;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #2c5aa0;
+            color: white;
+            border-left: 4px solid #ffc107;
+        }
+        .content-area {
+            margin-left: 280px;
+            margin-top: 56px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        /* Mobile: Hide sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .content-area {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+        .section-title {
+            color: #1a3c5e;
+            border-bottom: 2px solid #1a3c5e;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        .sign-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .sign-video {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 10px;
+            background: #000;
+        }
+        .sign-img {
+            max-width: 220px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .quiz-inline-link {
+            color: #1a3c5e;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            transition: color 0.2s ease-in-out;
+        }
+        .quiz-inline-link:hover {
+            color: #ffc107;
+        }
+
+        .next-lesson-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .next-lesson-card .btn-primary {
+            background-color: #1a3c5e;
+            border-color: #1a3c5e;
+        }
+        .next-lesson-card .btn-primary:hover {
+            background-color: #2c5aa0;
+            border-color: #2c5aa0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Responsive Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #1a3c5e;">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">SignMaster</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                <a class="nav-link" href="{{ url_for('start_lesson') }}">Lessons</a>
+                <a class="nav-link" href="{{ url_for('dictionary') }}">Dictionary</a>
+                <a class="nav-link" href="{{ url_for('exercises') }}">Exercises</a>
+                <a class="nav-link btn btn-light text-dark ms-lg-3 mt-2 mt-lg-0" href="{{ url_for('login') }}">Sign In</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <!-- Left Sidebar (Desktop Only) -->
+    <div class="sidebar">
+        <div>
+            <h5>Lessons</h5>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('start_lesson') }}" class="sidebar-link">
+                <span class="lesson-num">1</span>
+                NSL Alphabet</a>
+            <a href="{{ url_for('family_lesson') }}" class="sidebar-link">
+                <span class="lesson-num">2</span>
+                Family Relationship</a>
+            <a href="{{ url_for('signmaster_quiz') }}" class="sidebar-link active">
+                <span class="lesson-num">3</span>
+                Pronouns, Question Words, and Ending</a>
+            <a href="#" class="sidebar-link">
+                <span class="lesson-num">3</span>
+                More Lessons</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-area">
+
+        <div class="d-md-none mb-4">
+            <label class="form-label fw-bold d-block">Go to lesson</label>
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        style="border-color: #1a3c5e; color: #1a3c5e; padding: 12px; border-radius: 10px;">
+                    Family Relationship
+                </button>
+                <ul class="dropdown-menu w-100 shadow-sm" style="border-color: #1a3c5e;">
+                    <li><a class="dropdown-item" href="{{ url_for('start_lesson') }}">NSL Alphabet</a></li>
+                    <li><a class="dropdown-item active" href="{{ url_for('family_lesson') }}">Family Relationship</a></li>
+                    <li><a class="dropdown-item" href="#">Pronouns &amp; Questions</a></li>
+                    <li><a class="dropdown-item" href="#">More Lessons</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <section id="intro" class="mb-5">
+            <h2 class="section-title">Pronouns, Question Words,
+and Endings</h2>
+<!--            <p>-->
+<!--                In this lesson, you will learn the basic signs used to talk about family members in Nigerian Sign Language (NSL).-->
+<!--                These signs are very useful for everyday conversation.-->
+<!--            </p>-->
+        </section>
+
+        <!-- I -->
+        <section id="i" class="sign-box">
+            <h3>1. I</h3>
+
+            <!-- Video -->
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='i.mp4') }}" type="video/mp4">
+            </video>
+
+            <!-- Picture -->
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='male.jpeg') }}" alt="Male sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> The “I” hand is placed at the chest.</p>
+        </section>
+
+        <!-- Me -->
+        <section id="me" class="sign-box">
+            <h3>2. Me</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='me.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='female.jpeg') }}" alt="Female sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Point the right index finger at yourself.</p>
+
+            </section>
+
+        <!-- We -->
+        <section id="we" class="sign-box">
+            <h3>3. We</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='we.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='father.jpeg') }}" alt="Father sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the index finger at the right shoulder and circle it
+forward and around until it touches the left shoulder.
+        </section>
+
+        <!-- Us -->
+        <section id="us" class="sign-box">
+            <h3>4. Us</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='us.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='mother.jpeg') }}" alt="Mother sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the "U" hand at the right shoulder and circle it
+forward and around until it touches the left shoulder.
+        </section>
+
+        <!-- you -->
+        <section id="you" class="sign-box">
+            <h3>5. You</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='you.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='brother.jpeg') }}" alt="Brother sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Point the index finger out. For the plural, point the index
+finger out and move from left to right.</p>
+        </section>
+
+        <!-- They -->
+        <section id="they" class="sign-box">
+            <h3>6. They</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='they.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='brother.jpeg') }}" alt="Brother sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+
+             </section>
+
+        <!-- Them -->
+        <section id="them" class="sign-box">
+            <h3>7. Them</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='them.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='brother.jpeg') }}" alt="Brother sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Those These -->
+        <section id="those" class="sign-box">
+            <h3>8. These, Those</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='those.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- This -->
+         <section id="this" class="sign-box">
+            <h3>9. This</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='this.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the tip of the right index finger into the left open
+palm.</p>
+        </section>
+
+         <!-- My Mine -->
+         <section id="my" class="sign-box">
+            <h3>10. My, Mine</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='my.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the open palm on the chest.
+Origin: showing possession by holding an object against
+the chest</p>
+        </section>
+
+         <!-- His -->
+         <section id="his" class="sign-box">
+            <h3>11. His</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='his.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Her -->
+         <section id="her" class="sign-box">
+            <h3>12. Her</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='her.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+         <!-- Their Theirs -->
+         <section id="their" class="sign-box">
+            <h3>13. Their, Theirs</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='their.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Our -->
+         <section id="our" class="sign-box">
+            <h3>14. Our</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='our.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the right hand, slightly cupped, at the right shoulder
+with thumb side against the body; circle it around until the
+little-finger side touches the left shoulder.</p>
+        </section>
+
+        <!-- Self, Myself -->
+         <section id="myself" class="sign-box">
+            <h3>15. Self, Myself</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='myself.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Strike the “A” hand, palm side facing left, against the chest
+several times.</p>
+        </section>
+
+        <!-- Ourselves -->
+         <section id="ourselves" class="sign-box">
+            <h3>16. Ourselves</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='ourselves.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Yourself -->
+         <section id="yourself" class="sign-box">
+            <h3>17. Yourself</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='yourself.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Himself -->
+         <section id="himself" class="sign-box">
+            <h3>18. Himself</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='himself.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Herself -->
+         <section id="herself" class="sign-box">
+            <h3>19. Herself</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='herself.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> later.</p>
+        </section>
+
+        <!-- Themselves -->
+         <section id="themselves" class="sign-box">
+            <h3>20. Themselves</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='themselve.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> later.</p>
+        </section>
+
+        <!-- Itself -->
+         <section id="itself" class="sign-box">
+            <h3>21. Itself</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='itself.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> later.</p>
+        </section>
+
+        <!-- Each Every -->
+         <section id="every" class="sign-box">
+            <h3>22. Each, Every</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='every.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Hold up the left “A” and use the inside of the thumb of the
+              right “A” to make downward strokes on the back of the left
+              thumb. (Each is done once, and every twice.)</p>
+        </section>
+
+        <!-- Someone -->
+         <section id="someone" class="sign-box">
+            <h3>23. Someone</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='someone.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Sombody -->
+         <section id="somebody" class="sign-box">
+            <h3>24. Somebody</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='somebody.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Something -->
+         <section id="something" class="sign-box">
+            <h3>25. Something</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='something.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Any -->
+         <section id="any" class="sign-box">
+            <h3>26. Any</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='any.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the “A” hand before the body and draw it to the right
+                        while moving it up and down from the wrists so that the
+                        thumb points first up and then down.</p>
+        </section>
+
+        <!-- Anyone -->
+         <section id="anyone" class="sign-box">
+            <h3>27. Anyone</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='anyone.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Sign “ANY” and “ONE.”</p>
+        </section>
+
+        <!-- Anybody -->
+         <section id="anybody" class="sign-box">
+            <h3>28. Anybody</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='anybody.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Sign “ANY” and “BODY.”</p>
+        </section>
+
+        <!-- Anything -->
+         <section id="anything" class="sign-box">
+            <h3>29. Anything</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='anything.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Sign “ANY” and “THING.”</p>
+        </section>
+
+        <!-- Everybody -->
+         <section id="everybody" class="sign-box">
+            <h3>30. Everybody</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='everybody.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Sign “EACH” and “BODY.”</p>
+        </section>
+
+        <!-- Everyone -->
+         <section id="everyone" class="sign-box">
+            <h3>31. Everyone</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='everyone.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Sign “EACH” and “ONE.”</p>
+        </section>
+
+        <!-- Other -->
+         <section id="other" class="sign-box">
+            <h3>32. Other</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='other.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Move the “O” hand slightly up and to the right, turning the
+                                            thumb up and over toward the right.</p>
+        </section>
+
+        <!-- Another -->
+         <section id="another" class="sign-box">
+            <h3>33. Another</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='another.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Move the “A” hand slightly up and to the right, turning the
+                                            thumb up and over toward the right.</p>
+        </section>
+
+        <!-- Fellowship -->
+         <section id="fellowship" class="sign-box">
+            <h3>34. Fellowship</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='fellowship.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Circle the right “A” which is pointing down in a
+                                                    counterclockwise motion around the thumb of the left “A”
+                                                    which is pointing up and moving in a counterclockwise
+                                                    motion.</p>
+        </section>
+
+        <!-- That -->
+         <section id="that" class="sign-box">
+            <h3>35. That</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='that.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the right “Y” on the left palm.</p>
+        </section>
+
+        <!-- Who -->
+         <section id="who" class="sign-box">
+            <h3>36. Who</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='who.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> The index finger draws a circle (leftward) in front of the
+                                                lips.</p>
+        </section>
+
+        <!-- Which -->
+         <section id="which" class="sign-box">
+            <h3>37. Which</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='which.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place both “A” hands before you with palms facing each
+                                                other and raise and lower them alternately..</p>
+        </section>
+
+        <!-- How -->
+         <section id="how" class="sign-box">
+            <h3>38. How</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='how.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the curved hands back to back with fingers pointing
+                                                down; turn hands away from, then toward, yourself in this
+                                                position until fingers point up.</p>
+        </section>
+
+        <!-- What -->
+         <section id="what" class="sign-box">
+            <h3>39. What</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='what.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Draw the tip of the right index (which is facing self)
+                                                    downward across the left open palm. Or hold both hands
+                                                    out palms up and move your palms in and out. Some prefer
+                                                    to simply fingerspell “what.”</p>
+        </section>
+
+        <!-- Why -->
+         <section id="why" class="sign-box">
+            <h3>40. Why</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='why.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Touch the fingertips to the forehead and draw them
+                                                away, forming a “Y” (palm facing self). “WHY” is often
+                                                fingerspelled.</p>
+        </section>
+
+        <!-- When -->
+         <section id="when" class="sign-box">
+            <h3>41. When</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='when.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong>  left index is held up facing you; right index faces out
+                                                and draws a circle in front of the left index and comes to
+                                                rest on the tip of the left index.</p>
+        </section>
+
+        <!-- Where -->
+         <section id="where" class="sign-box">
+            <h3>42. Where</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='where.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong>  Hold up the right index finger and shake the hand back and
+                                                forth quickly from left to right. </p>
+        </section>
+
+        <!-- The -->
+         <section id="the" class="sign-box">
+            <h3>43. A, AN, THE</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='the.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong>  A, AN, THE—As a rule, articles are omitted in the
+                                                    language of signs as used by deaf adults. However, in
+                                                    manual English systems, they are included for educational
+                                                    purposes. In these cases, they are made as follows:<br>
+                                                    A—Move the right “A” slightly to the right;<br>
+                                                    AN—fingerspell;<br>
+                                                    THE—Turn the “T” from a palm-left to a palm<br>
+                                                    forward position. </p>
+        </section>
+
+        <!-- Person -->
+         <section id="person" class="sign-box">
+            <h3>44. Person </h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='person.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong>  # </p>
+        </section>
+
+        <!-- Person Ending-->
+         <section id="person_ending" class="sign-box">
+            <h3>45. Person Ending</h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='person_ending.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Both open hands facing each other are brought down in
+                        front of the body. This sign is an ending only and is used
+                        following verbs, occupations, and locations.</p>
+             <p><strong>Usage:</strong> teach—teacher; America—American; act—actor;
+                        law—lawyer; south—southerner; prophesy—
+                        prophet.</p>
+             <p><strong>Note:</strong> When the word ending designates a specific person,
+                        use that sign, as: salesman = “sales” + “man.”</p>
+        </section>
+
+        <!-- Negative -->
+         <section id="negative" class="sign-box">
+            <h3>46. Negative </h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='negative.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> #</p>
+        </section>
+
+        <!-- Ment -->
+         <section id="ment" class="sign-box">
+            <h3>47. -Ment </h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='ment.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the side of the right “M” against the left palm (which
+                                            has fingertips pointing up); move “M” downward.</p>
+        </section>
+
+        <!-- Ness -->
+         <section id="ness" class="sign-box">
+            <h3>48. -Ness </h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='ness.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the side of the right “N” against the left palm (which
+                                            has fingertips pointing up); move “N” downward.</p>
+        </section>
+
+        <!-- Pre -->
+         <section id="pre" class="sign-box">
+            <h3>49. Pre </h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='pre.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the back of the right “P” against the left palm and
+                                                move the “P” away from the palm toward self.</p>
+        </section>
+
+        <!-- Post -->
+         <section id="post" class="sign-box">
+            <h3>50. Post </h3>
+
+            <video class="sign-video mb-3" controls preload="none">
+                <source src="{{ url_for('serve_video', filename='post.mp4') }}" type="video/mp4">
+            </video>
+
+<!--            <div class="mb-3">-->
+<!--                <img src="{{ url_for('static', filename='sister.jpeg') }}" alt="Sister sign" class="sign-img">-->
+<!--            </div>-->
+
+            <p><strong>Description:</strong> Place the palm side of the right “P” against the back of the
+                                            left hand and move the “P” away from the hand.</p>
+        </section>
+
+        <section id="practice" class="mb-5">
+            <h2 class="section-title">Practice & Test Your Skills</h2>
+            <h5>Practice sign language wth family</h5>
+            <p>
+                Practice each sign carefully. Watch the video, look at the picture, and try to copy the movement.
+            </p>
+            <p>
+                <strong>Ready to test yourself?</strong><br>
+                Try
+                <a href="{{ url_for('signmaster_quiz') }}" class="quiz-inline-link fw-bold"> Quiz →</a>
+                to see how much you've learned!
+            </p>
+        </section>
+
+        <!-- Next Lesson Navigation Card -->
+        <div class="next-lesson-card d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mt-5 mb-5 p-4 rounded-3">
+            <div>
+                <small class="text-uppercase fw-semibold text-muted tracking-wide d-block mb-1">Up Next</small>
+                <h5 class="mb-0 text-dark fw-bold">Lesson 3: Time</h5>
+            </div>
+            <a href="{{ url_for('family_lesson') }}" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm text-nowrap">
+                Next Lesson →
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+<footer class="text-center text-white py-4 mt-5" style="background-color: #2c3539;">
+    <div class="container">
+        <p class="mb-1 fw-bold">SignMaster</p>
+        <p class="mb-2 small">Learn Nigerian Sign Language the easy way</p>
+        <p class="mb-0 small text-white-50">
+            &copy; 2026 SignMaster. Built for inclusive education.
+        </p>
+    </div>
+</footer>
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+        // Highlight active section when scrolling
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === current) {
+                    link.classList.add('active');
+                }
+            });
+        }, true);
+
+        // Also for content area scroll
+        document.getElementById('content').addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (document.getElementById('content').scrollTop >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+     document.addEventListener('play, function(e){
+        const videos = document.querySelectorAll('video');
+        videos.forEach(function(video){
+            if (video !== e.target){
+                video.pause();
+            }
+        });
+     }, true);
+    </script>
+</body>
+</html>

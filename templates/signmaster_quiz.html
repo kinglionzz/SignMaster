@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignMaster Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .quiz-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .video-container {
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            max-width: 520px;
+            margin: 0 auto 25px;
+        }
+        .option-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-item:hover {
+            background: #f8f9fa;
+            border-color: #0d6efd;
+        }
+        .option-item.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .option-item.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        .next-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<!-- Responsive Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c5e;">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">SignMaster</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                <a class="nav-link" href="{{ url_for('start_lesson') }}">Lessons</a>
+                <a class="nav-link" href="{{ url_for('dictionary') }}">Dictionary</a>
+                <a class="nav-link" href="{{ url_for('exercises') }}">Exercises</a>
+                <a class="nav-link btn btn-light text-dark ms-lg-3 mt-2 mt-lg-0" href="{{ url_for('login') }}">Sign In</a>
+            </div>
+        </div>
+    </div>
+</nav>
+    <div class="container py-5">
+        <div class="quiz-container">
+
+            <!-- Title centered -->
+            <h2 class="text-center mb-2">SignMaster Quiz</h2>
+            <p class="text-center text-muted mb-4">Watch the sign language video carefully and choose the correct meaning.</p>
+
+            <!-- Question number -->
+            <div class="text-center mb-3">
+                <span class="badge bg-primary fs-6">Question <span id="q-number">1</span>/10</span>
+            </div>
+
+            <!-- Video -->
+            <div class="video-container">
+                <video id="lesson-video" width="100%" height="360" controls autoplay loop muted>
+                    <source src="{{ url_for('serve_video', filename='how_are_you.mp4') }}" type="video/mp4">
+                </video>
+            </div>
+
+            <h5 class="mb-3">What does this sign mean?</h5>
+
+            <!-- Options as list -->
+            <div id="options">
+                <!-- Options will be added by JavaScript -->
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button onclick="nextQuestion()" class="btn btn-primary next-btn" id="next-btn">Next Question →</button>
+            </div>
+        </div>
+    </div>
+
+    <script >
+        let current = 0;
+        let answered = false;
+        let score = 0;
+
+       // Sample questions
+const questions = [
+    {
+        video: "how_are_you.mp4",
+        question: "What does this sign mean?",
+        options: ["How are you?", "You are good?", "I am fine, thank you", "Your name?"],
+        correct: 0
+    },   // ← You must put a comma here
+    {
+        video: "hello.mp4",
+        question: "What does this sign mean?",
+        options: ["How are you?", "Hello", "Thank you", "Bye"],
+        correct: 1
+    },
+    {
+        video: "good_evening.mp4",
+        question: "What does this sign mean?",
+        options: ["Goodbye", "Good Morning", "Good Evening", "Good Afternoon"],
+        correct: 2
+    },   // ← You must put a comma here
+    {
+        video: "good_morning.mp4",
+        question: "What does this sign mean?",
+        options: ["Morning", "Good Luck", "Good Day", "Good Morning"],
+        correct: 3
+    },
+    {
+        video: "good_afternoon.mp4",
+        question: "What does this sign mean?",
+        options: ["Good Tree", "Good Child", "God", "Good Afternoon"],
+        correct: 3
+    },   // ← You must put a comma here
+    {
+        video: "august.mp4",
+        question: "What does this sign mean?",
+        options: ["August", "April", "September", "June"],
+        correct: 1
+    },
+    {
+        video: "janurany.mp4",
+        question: "What does this sign mean?",
+        options: ["July", "June", "January", "March"],
+        correct: 2
+    },   // ← You must put a comma here
+    {
+        video: "july.mp4",
+        question: "What does this sign mean?",
+        options: ["June", "July", "Just", "January"],
+        correct: 1
+    },
+    {
+        video: "sign_lan.mp4",
+        question: "What does this sign mean?",
+        options: ["Big Ball", "Clap Yourself", "Sign Language", "Cloud"],
+        correct: 2
+    },   // ← You must put a comma here
+    {
+        video: "you_good.mp4",
+        question: "What does this sign mean?",
+        options: ["Are you Good", "I am fine", "you Thumb", "Okay"],
+        correct: 0
+    }
+    // You can add more questions later
+];
+
+       function loadQuestion() {
+    const q = questions[current];
+    document.getElementById('lesson-video').src = "{{ url_for('serve_video', filename='') }}" + q.video;
+
+    // Update question number
+    document.getElementById('q-number').innerText = current + 1;
+
+    let html = '';
+    q.options.forEach((opt, i) => {
+        html += `
+            <div class="option-item" onclick="selectAnswer(this, ${i})">
+                ○ ${String.fromCharCode(65 + i)}. ${opt}
+            </div>
+        `;
+    });
+    document.getElementById('options').innerHTML = html;
+    document.getElementById('next-btn').style.display = 'none';
+    answered = false;
+}
+
+        function selectAnswer(elem, index) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[current];
+            const items = document.querySelectorAll('.option-item');
+
+            items.forEach((item, i) => {
+                if (i === q.correct) {
+                    item.classList.add('correct');
+                    item.innerHTML = "✓ " + item.innerText.substring(2);
+                }
+                if (i === index && i !== q.correct) {
+                    item.classList.add('wrong');
+                    item.innerHTML = "✗ " + item.innerText.substring(2);
+                }
+            });
+
+            if (index === q.correct) score++;
+
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+    current++;
+    if (current < questions.length) {
+        loadQuestion();
+    } else {
+        // Redirect to result page
+        window.location.href = "/quiz_result?score=" + score + "&total=" + questions.length;
+    }
+}
+
+        function prevQuestion() {
+            if (current > 0) {
+                current--;
+                loadQuestion();
+            }
+        }
+
+        // Load first question
+        loadQuestion();
+    </script>
+</body>
+</html>

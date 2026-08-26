@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary - SignMaster</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            max-width: 650px;
+            margin: 30px auto;
+        }
+        .sign-video {
+            width: 100%;
+            max-width: 480px;
+            border-radius: 12px;
+            background: #000;
+        }
+        .sidebar {
+            background-color: #1a3c5e;
+            color: white;
+            height: calc(100vh - 56px);
+            position: fixed;
+            width: 280px;
+            top: 56px;
+            overflow-y: auto;
+            padding-top: 20px;
+        }
+        .content-area {
+            margin-left: 280px;
+            margin-top: 56px;
+            padding: 40px;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+        }
+        /* Mobile: Hide sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .content-area {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Responsive Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a3c5e;">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">SignMaster</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                <a class="nav-link" href="{{ url_for('start_lesson') }}">Lessons</a>
+                <a class="nav-link" href="{{ url_for('dictionary') }}">Dictionary</a>
+                <a class="nav-link" href="{{ url_for('exercises') }}">Exercises</a>
+                <a class="nav-link btn btn-light text-dark ms-lg-3 mt-2 mt-lg-0" href="{{ url_for('login') }}">Sign In</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <div class="container py-5">
+        <h2 class="text-center mb-4">NSL Dictionary</h2>
+        <p class="text-center text-muted mb-4">Search for any sign and watch the video</p>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <form method="GET" action="{{ url_for('dictionary') }}">
+                <div class="input-group input-group-lg">
+                    <input type="text" name="q" class="form-control" placeholder="Type a word e.g. water, father, hello..." value="{{ query or '' }}" required>
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Result -->
+        {% if result %}
+        <div class="result-card text-center">
+            <h4 class="mb-3">{{ result.word | title }}</h4>
+
+            <video class="sign-video mb-3" controls autoplay loop muted>
+                <source src="{{ url_for('serve_video', filename=result.video) }}" type="video/mp4">
+            </video>
+
+            {% if result.description %}
+            <p class="mt-3">{{ result.description }}</p>
+            {% endif %}
+        </div>
+        {% elif query %}
+        <div class="text-center mt-5">
+            <p class="text-muted">No sign found for "<strong>{{ query }}</strong>"</p>
+        </div>
+        {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+        // Highlight active section when scrolling
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === current) {
+                    link.classList.add('active');
+                }
+            });
+        }, true);
+
+        // Also for content area scroll
+        document.getElementById('content').addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (document.getElementById('content').scrollTop >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
