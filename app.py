@@ -301,6 +301,7 @@ def forgot_password():
         return redirect(url_for('forgot_password'))
     return render_template('forgot_password.html')
 
+CLOUD_BASE_URL = "https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload"
 
 @app.route('/dictionary')
 def dictionary():
@@ -323,7 +324,7 @@ def dictionary():
         },
         "hello": {
             "word": "hello",
-            "video": "hello.mp4",
+            "video": "https://res.cloudinary.com/ns8sgve5/video/upload/v1787799569/hello.mp4",
         },
         "male": {
             "word": "male",
