@@ -301,411 +301,542 @@ def forgot_password():
         return redirect(url_for('forgot_password'))
     return render_template('forgot_password.html')
 
-CLOUD_BASE_URL = "https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload"
+CLOUD_BASE_URL = "https://res.cloudinary.com/ns8sgve5/video/upload"
+
+def cloudinary_video(filename):
+    return f"{CLOUD_BASE_URL}/{filename}"
+
+# ====================== CLOUDINARY ======================
+
+CLOUD_BASE_URL = "https://res.cloudinary.com/ns8sgve5/video/upload"
+
+
+def cloudinary_video(filename):
+    """
+    Convert a video filename into a Cloudinary video URL.
+
+    Example:
+    hello.mp4
+    becomes:
+    https://res.cloudinary.com/ns8sgve5/video/upload/hello.mp4
+    """
+
+    return f"{CLOUD_BASE_URL}/{filename}"
+
+
+# ====================== DICTIONARY ======================
 
 @app.route('/dictionary')
 def dictionary():
     query = request.args.get('q', '').lower().strip()
 
-    # Dictionary of signs (you can add more later)
+    # Dictionary of signs
+    # Keep ONLY the filename here.
+    # The app will automatically create the Cloudinary URL.
     signs = {
+
         "water": {
             "word": "water",
             "video": "water.mp4",
-            # "description": "The sign for water in Nigerian Sign Language."
         },
+
         "father": {
             "word": "father",
             "video": "father.mp4",
         },
+
         "mother": {
             "word": "mother",
             "video": "mother.mp4",
         },
+
         "hello": {
             "word": "hello",
-            "video": "https://res.cloudinary.com/ns8sgve5/video/upload/v1787799569/hello.mp4",
+            "video": "hello.mp4",
         },
+
         "male": {
             "word": "male",
             "video": "male.mp4",
         },
+
         "female": {
             "word": "female",
             "video": "female.mp4",
         },
+
         "adult": {
             "word": "adult",
             "video": "adult.mp4",
         },
+
         "am": {
             "word": "am",
             "video": "am.mp4",
         },
+
         "another": {
             "word": "another",
             "video": "another.mp4",
         },
+
         "any": {
             "word": "any",
             "video": "any.mp4",
         },
+
         "anybody": {
             "word": "anybody",
             "video": "anybody.mp4",
         },
+
         "anyone": {
             "word": "anyone",
             "video": "anyone.mp4",
         },
+
         "anything": {
             "word": "anything",
             "video": "anything.mp4",
         },
+
         "april": {
             "word": "april",
             "video": "april.mp4",
         },
+
         "august": {
             "word": "august",
             "video": "august.mp4",
         },
+
         "aunty": {
             "word": "aunty",
             "video": "aunty.mp4",
         },
+
         "baby": {
             "word": "baby",
             "video": "baby.mp4",
         },
+
         "brother": {
             "word": "brother",
             "video": "brother.mp4",
         },
+
         "child": {
             "word": "child",
             "video": "child.mp4",
         },
+
         "cousin": {
             "word": "cousin",
             "video": "cousin.mp4",
         },
+
         "daughter": {
             "word": "daughter",
             "video": "daughter.mp4",
         },
+
         "december": {
             "word": "december",
             "video": "december.mp4",
         },
+
         "divorce": {
             "word": "divorce",
             "video": "divorce.mp4",
         },
+
         "engagement": {
             "word": "engagement",
             "video": "engagement.mp4",
         },
+
         "every": {
             "word": "every",
             "video": "every.mp4",
         },
+
         "everybody": {
             "word": "everybody",
             "video": "everybody.mp4",
         },
+
         "everyone": {
             "word": "everyone",
             "video": "everyone.mp4",
         },
+
         "everything": {
             "word": "everything",
             "video": "everything.mp4",
         },
+
         "family": {
             "word": "family",
             "video": "family.mp4",
         },
+
         "february": {
             "word": "february",
             "video": "february.mp4",
         },
+
         "fellowship": {
             "word": "fellowship",
             "video": "fellowship.mp4",
         },
+
         "generation": {
             "word": "generation",
             "video": "generation.mp4",
         },
+
         "grandfather": {
             "word": "grandfather",
             "video": "grandfather.mp4",
         },
+
         "gentleman": {
             "word": "gentleman",
             "video": "gentleman.mp4",
         },
+
         "grandmother": {
             "word": "grandmother",
             "video": "grandmother.mp4",
         },
+
         "her": {
             "word": "her",
             "video": "her.mp4",
         },
+
         "herself": {
             "word": "herself",
             "video": "herself.mp4",
         },
+
         "himself": {
             "word": "himself",
             "video": "himself.mp4",
         },
+
         "his": {
             "word": "his",
             "video": "his.mp4",
         },
+
         "how": {
             "word": "how",
             "video": "how.mp4",
         },
+
         "husband": {
             "word": "husband",
             "video": "husband.mp4",
         },
+
         "i": {
             "word": "i",
             "video": "i.mp4",
         },
+
         "ing": {
             "word": "ing",
             "video": "ing.mp4",
         },
+
         "itself": {
             "word": "itself",
             "video": "itself.mp4",
         },
+
         "january": {
             "word": "january",
             "video": "january.mp4",
         },
+
         "june": {
             "word": "june",
             "video": "june.mp4",
         },
+
         "july": {
             "word": "july",
             "video": "july.mp4",
         },
+
         "kid": {
             "word": "kid",
             "video": "kid.mp4",
         },
+
         "march": {
             "word": "march",
             "video": "march.mp4",
         },
+
         "may": {
             "word": "may",
             "video": "may.mp4",
         },
+
         "me": {
             "word": "me",
             "video": "me.mp4",
         },
+
         "ment": {
             "word": "ment",
             "video": "ment.mp4",
         },
+
         "my": {
             "word": "my",
             "video": "my.mp4",
         },
+
         "myself": {
             "word": "myself",
             "video": "myself.mp4",
         },
+
         "negative": {
             "word": "negative",
             "video": "negative.mp4",
         },
+
         "nephew": {
             "word": "nephew",
             "video": "nephew.mp4",
         },
+
         "niece": {
-            "word": "father",
-            "video": "father.mp4",
+            "word": "niece",
+            "video": "niece.mp4",
         },
+
         "november": {
             "word": "november",
             "video": "november.mp4",
         },
+
         "october": {
             "word": "october",
             "video": "october.mp4",
         },
+
         "other": {
             "word": "other",
             "video": "other.mp4",
         },
+
         "our": {
             "word": "our",
             "video": "our.mp4",
         },
+
         "parents": {
             "word": "parents",
             "video": "parents.mp4",
         },
+
         "person": {
             "word": "person",
             "video": "person.mp4",
         },
+
         "post": {
             "word": "post",
             "video": "post.mp4",
         },
+
         "pre": {
             "word": "pre",
             "video": "pre.mp4",
         },
+
         "september": {
             "word": "september",
             "video": "september.mp4",
         },
+
         "sign language": {
             "word": "sign language",
             "video": "sign_lang.mp4",
         },
+
         "sister": {
             "word": "sister",
             "video": "sister.mp4",
         },
+
         "somebody": {
             "word": "somebody",
             "video": "somebody.mp4",
         },
+
         "someone": {
             "word": "someone",
             "video": "someone.mp4",
         },
+
         "something": {
             "word": "something",
             "video": "something.mp4",
         },
+
         "son": {
             "word": "son",
             "video": "son.mp4",
         },
+
         "stepfather": {
             "word": "stepfather",
             "video": "stepfather.mp4",
         },
+
         "stepmother": {
             "word": "stepmother",
             "video": "stepmother.mp4",
         },
+
         "that": {
             "word": "that",
             "video": "that.mp4",
         },
+
         "the": {
             "word": "the",
             "video": "the.mp4",
         },
+
         "their": {
             "word": "their",
             "video": "their.mp4",
         },
+
         "them": {
             "word": "them",
             "video": "them.mp4",
         },
+
         "themselve": {
             "word": "themselve",
             "video": "themselve.mp4",
         },
+
         "they": {
             "word": "they",
             "video": "they.mp4",
         },
+
         "this": {
             "word": "this",
             "video": "this.mp4",
         },
+
         "those": {
             "word": "those",
             "video": "those.mp4",
         },
+
         "twins": {
             "word": "twins",
             "video": "twins.mp4",
         },
+
         "uncle": {
             "word": "uncle",
             "video": "uncle.mp4",
         },
+
         "us": {
             "word": "us",
             "video": "us.mp4",
         },
+
         "we": {
             "word": "we",
             "video": "we.mp4",
         },
+
         "wedding": {
             "word": "wedding",
             "video": "wedding.mp4",
         },
+
         "what": {
             "word": "what",
             "video": "what.mp4",
         },
+
         "when": {
             "word": "when",
             "video": "when.mp4",
         },
+
         "where": {
             "word": "where",
             "video": "where.mp4",
         },
+
         "whether": {
             "word": "whether",
             "video": "whether.mp4",
         },
+
         "which": {
             "word": "which",
             "video": "which.mp4",
         },
+
         "who": {
             "word": "who",
             "video": "who.mp4",
         },
+
         "why": {
             "word": "why",
             "video": "why.mp4",
         },
+
         "wife": {
             "word": "wife",
             "video": "wife.mp4",
         },
+
         "you": {
             "word": "you",
             "video": "you.mp4",
         },
+
         "your": {
             "word": "your",
             "video": "your.mp4",
         },
+
         "yourself": {
             "word": "yourself",
             "video": "yourself.mp4",
         }
     }
 
+    # Convert every video filename to its Cloudinary URL
+    for sign in signs.values():
+        sign["video"] = cloudinary_video(sign["video"])
+
     result = signs.get(query)
-    return render_template('dictionary.html', query=query, result=result)
+
+    return render_template(
+        'dictionary.html',
+        query=query,
+        result=result
+    )
 
 
 
