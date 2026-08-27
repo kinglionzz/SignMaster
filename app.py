@@ -720,8 +720,6 @@ if __name__ == '__main__':
 
 @app.route('/signmaster_quiz')
 @login_required
-def signmaster_quiz():
-    return render_template('signmaster_quiz.html')
 
 
 @app.route('/submit_quiz', methods=['POST'])
