@@ -718,11 +718,6 @@ if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)
 
-@app.route('/signmaster_quiz')
-@login_required
-def signmaster_quiz():
-    return render_template('signmaster_quiz.html')
-
 @app.route('/submit_quiz', methods=['POST'])
 @login_required
 def submit_quiz():
