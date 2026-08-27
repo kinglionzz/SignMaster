@@ -99,7 +99,7 @@
             <h4 class="mb-3">{{ result.word | title }}</h4>
 
             <video class="sign-video mb-3" controls autoplay loop muted>
-                <source src="{{ url_for('serve_video', filename=result.video) }}" type="video/mp4">
+                <source src="{{ result.video }}" type="video/mp4">
             </video>
 
             {% if result.description %}
