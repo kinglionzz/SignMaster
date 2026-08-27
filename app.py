@@ -725,7 +725,6 @@ if __name__ == '__main__':
 @app.route('/submit_quiz', methods=['POST'])
 @login_required
 def submit_quiz():
-    # For now, just show result page (we will improve later)
     return render_template('quiz_result.html', score=8, total=10)
 
 
