@@ -718,7 +718,6 @@ if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)
 
-# To look like this instead:
 @app.route('/signmaster_quiz')
 @login_required
 def signmaster_quiz():
