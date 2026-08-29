@@ -323,6 +323,10 @@ def cloudinary_video(filename):
 
     return f"{CLOUD_BASE_URL}/{filename}"
 
+@app.context_processor
+def inject_cloudinary():
+    return dict(cloudinary_video=cloudinary_video)
+
 
 # ====================== DICTIONARY ======================
 
