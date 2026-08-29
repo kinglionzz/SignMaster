@@ -79,8 +79,7 @@
             <!-- Video -->
             <div class="video-container">
                 <video id="lesson-video" width="100%" height="360" controls autoplay loop muted>
-                    <source src="{{ url_for('serve_video', filename='how_are_you.mp4') }}" type="video/mp4">
-                </video>
+</video>
             </div>
 
             <h5 class="mb-3">What does this sign mean?</h5>
@@ -104,71 +103,72 @@
        // Sample questions
 const questions = [
     {
-        video: "how_are_you.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/how_are_you.mp4",
         question: "What does this sign mean?",
         options: ["How are you?", "You are good?", "I am fine, thank you", "Your name?"],
         correct: 0
-    },   // ← You must put a comma here
+    },
     {
-        video: "hello.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/hello.mp4",
         question: "What does this sign mean?",
         options: ["How are you?", "Hello", "Thank you", "Bye"],
         correct: 1
     },
     {
-        video: "good_evening.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/good_evening.mp4",
         question: "What does this sign mean?",
         options: ["Goodbye", "Good Morning", "Good Evening", "Good Afternoon"],
         correct: 2
-    },   // ← You must put a comma here
+    },
     {
-        video: "good_morning.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/good_morning.mp4",
         question: "What does this sign mean?",
         options: ["Morning", "Good Luck", "Good Day", "Good Morning"],
         correct: 3
     },
     {
-        video: "good_afternoon.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/good_afternoon.mp4",
         question: "What does this sign mean?",
         options: ["Good Tree", "Good Child", "God", "Good Afternoon"],
         correct: 3
-    },   // ← You must put a comma here
-    {
-        video: "august.mp4",
-        question: "What does this sign mean?",
-        options: ["August", "April", "September", "June"],
-        correct: 1
     },
     {
-        video: "janurany.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/august.mp4",
+        question: "What does this sign mean?",
+        options: ["August", "April", "September", "June"],
+        correct: 0
+    },
+    {
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/janurany.mp4",
         question: "What does this sign mean?",
         options: ["July", "June", "January", "March"],
         correct: 2
-    },   // ← You must put a comma here
+    },
     {
-        video: "july.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/july.mp4",
         question: "What does this sign mean?",
         options: ["June", "July", "Just", "January"],
         correct: 1
     },
     {
-        video: "sign_lan.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/sign_lan.mp4",
         question: "What does this sign mean?",
         options: ["Big Ball", "Clap Yourself", "Sign Language", "Cloud"],
         correct: 2
-    },   // ← You must put a comma here
+    },
     {
-        video: "you_good.mp4",
+        video: "https://res.cloudinary.com/ns8sgve5/video/upload/you_good.mp4",
         question: "What does this sign mean?",
         options: ["Are you Good", "I am fine", "you Thumb", "Okay"],
         correct: 0
     }
-    // You can add more questions later
 ];
 
-       function loadQuestion() {
+function loadQuestion() {
     const q = questions[current];
-    document.getElementById('lesson-video').src = "{{ url_for('serve_video', filename='') }}" + q.video;
+
+    // Load Cloudinary video
+    document.getElementById('lesson-video').src = q.video;
 
     // Update question number
     document.getElementById('q-number').innerText = current + 1;
